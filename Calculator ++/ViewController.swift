@@ -9,6 +9,20 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    // where the result is displayed
+    @IBOutlet weak var resultField: UILabel!
+    
+    // model for calculator
+    private let calculator = CalculatorModel()
+    
+    
+    @IBAction func buttonPressed(_ sender: UIButton) {
+        let button = sender.currentTitle
+        resultField.text = calculator.update(button!)
+        
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
