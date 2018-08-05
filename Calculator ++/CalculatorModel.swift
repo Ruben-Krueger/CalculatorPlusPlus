@@ -10,11 +10,10 @@ import Foundation
 
 class CalculatorModel {
     
-    // most recently pressed operator
-    private var operand: String?
-    
     //
     private var total = "0"
+    
+    private var runningTotal = "0"
     
     private var operandPressed = ""
     
@@ -50,34 +49,173 @@ class CalculatorModel {
     }
     
     
-    private func performOperation(_ number: String) {
+    private func performOperation() {
         var result = 0.0
         if(operandPressed == "+") {
-            result = Double(total)! + Double(number)!
+            result = Double(total)! + Double(runningTotal)!
             total = String(result)
         }
         else if(operandPressed == "-") {
-            result = Double(total)! - Double(number)!
+            result = Double(total)! - Double(runningTotal)!
             total = String(result)
         }
         else if(operandPressed == "*") {
-            result = Double(total)! * Double(number)!
+            result = Double(total)! * Double(runningTotal)!
             total = String(result)
         }
-        else if(Double(number) != 0){
-            result = Double(total)! / Double(number)!
+        else if(Double(runningTotal) != 0){
+            result = Double(total)! / Double(runningTotal)!
             total = String(result)
         }
     }
     
     func update(_ button: String) -> String{
-        let digit = convertButtonToDigit(button)
+  
         
-//        // if digit pressed AND no previous operator pressed
-//        if(digit != -1 && operandPressed == "") {
-//            total += button
+        let digit = convertButtonToDigit(button)
+        if(button == "=") {
+            let temp = Double(total)! + Double(runningTotal)!
+            total = String(temp)
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            
+            
+            return total
+        }
+        else if(button == "+/-" && runningTotal != "0") {
+            let temp = -Double(runningTotal)!
+            runningTotal = String(temp)
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            return runningTotal
+        }
+        else if(button == "%" && runningTotal != "0"){
+            let temp = Double(runningTotal)!/100
+            runningTotal = String(temp)
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            return runningTotal
+        }
+        else if(digit != -1 && operandPressed == "") {
+            if(runningTotal == "0") {
+                runningTotal = button
+            }
+            else {
+                runningTotal += button
+            }
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            return runningTotal
+        }
+        // digit pressed AND previous operator pressed
+        else if(digit != -1 && operandPressed != "") {
+            runningTotal = button
+            performOperation()
+            
+            // reset the operand
+            operandPressed = ""
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            return runningTotal
+        }
+            // operator pressed
+        else if(Operands.contains(button)) {
+            operandPressed = button
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            return runningTotal
+        }
+            // if the decimal point was pressed AND the total does not already contain one
+        else if(button == "." && !total.contains(".")) {
+            runningTotal += button
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            return runningTotal
+        }
+        else if(button == "AC") {
+            total = "0"
+            runningTotal = "0"
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            return total
+        }
+        else {
+            print("Button: " + button)
+            print("Running total: " + runningTotal)
+            print("Total: " + total)
+            print("Operand pressed" + operandPressed)
+            return "0"
+        }
+
+        
+//        let digit = convertButtonToDigit(button)
+//        if(button == "=") {
+//            total += runningTotal
 //            return total
 //        }
+//        if(button == "+/-" && total != "0") {
+//            let temp = -Double(total)!
+//            total = String(temp)
+//            return total
+//        }
+//        else if(button == "%" && total != "0"){
+//            let temp = Double(total)!/100
+//            total = String(temp)
+//            return total
+//        }
+//        else if(digit != -1 && operandPressed == "") {
+//            if(total == "0") {
+//                runningTotal = button
+//            }
+//            else {
+//                runningTotal += button
+//            }
+//            return runningTotal
+//        }
+//        // digit pressed AND previous operator pressed
+//        else if(digit != -1 && operandPressed != "") {
+//            performOperation(button)
+//
+//            // reset the operand
+//            operandPressed = ""
+//            return total
+//        }
+//        // operator pressed
+//        else if(Operands.contains(button)) {
+//            operandPressed = button
+//            return total
+//        }
+//        // if the decimal point was pressed AND the total does not already contain one
+//        else if(button == "." && !total.contains(".")) {
+//            runningTotal += button
+//            return runningTotal
+//        }
+//        else if(button == "AC") {
+//            total = "0"
+//            return total
+//        }
+//        else {
+//            return "0"
+//        }
+        
+        
+
 //        else {
 //            // digit pressed AND previous operator pressed
 //            if(digit != -1 && operandPressed != "") {
@@ -97,12 +235,7 @@ class CalculatorModel {
 //            else if(button == "AC") {
 //                total = "0"
 //            }
-//            else if(digit != -1 && total == "0") {
-//                total = button
-//            }
-//            else if(digit != -1 && total != "0"){
-//                total += button
-//            }
+
 //            return total
 //        }
         
